@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Record System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e1c19;
+            --paper-cream: #f4ecd8;
+            --paper-light: #faf3e0;
+            --paper-shadow: #e8ddc4;
+            --ink-dark: #2a2620;
+            --ink-medium: #4a4238;
+            --ink-light: #7a7265;
+            --ink-faded: #a89f8e;
+            --accent-green: #5d8a6a;
+            --accent-green-dark: #4a7055;
+            --accent-red: #b5544a;
+            --accent-red-dark: #94413a;
+            --accent-orange: #d98c3f;
+            --accent-orange-dark: #b8722e;
+            --border-subtle: rgba(42, 38, 32, 0.15);
+            --border-strong: rgba(42, 38, 32, 0.35);
+            --error-red: #b5443a;
+            --success-green: #4a7c59;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(217, 140, 63, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(93, 138, 106, 0.05) 0%, transparent 40%);
+            color: var(--ink-dark);
+            padding: 24px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { width: 100%; max-width: 720px; }
+
+        /* HEADER RIBBON */
+        .header-ribbon {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .header-ribbon .crest {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-red) 100%);
+            color: white;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            box-shadow: 0 6px 20px rgba(217, 140, 63, 0.35), inset 0 -2px 6px rgba(0,0,0,0.2);
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .header-ribbon h1 {
+            font-family: 'Special Elite', 'Courier New', monospace;
+            color: var(--paper-cream);
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            font-weight: 400;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .header-ribbon .subtitle-ribbon {
+            color: var(--ink-faded);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        /* PAPER CARD */
+        .card {
+            position: relative;
+            background-color: var(--paper-cream);
+            background-image: 
+                linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%),
+                repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(42, 38, 32, 0.03) 28px, rgba(42, 38, 32, 0.03) 29px);
+            border-radius: 4px;
+            padding: 28px 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15), 0 12px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.5);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, rgba(42,38,32,0.15) 10%, transparent 20%, rgba(42,38,32,0.15) 30%, transparent 40%, rgba(42,38,32,0.15) 50%, transparent 60%, rgba(42,38,32,0.15) 70%, transparent 80%, rgba(42,38,32,0.15) 90%, transparent 100%);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+            gap: 15px;
+        }
+
+        .card-header h2 {
+            font-family: 'Special Elite', 'Courier New', monospace;
+            font-size: 1.15rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: var(--ink-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h2::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--ink-dark);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(42,38,32,0.1);
+        }
+
+        .badge {
+            background: rgba(42, 38, 32, 0.08);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            color: var(--ink-medium);
+            border: 1px dashed var(--border-strong);
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .badge.filled-full {
+            background: rgba(93, 138, 106, 0.15);
+            color: var(--accent-green-dark);
+            border-color: var(--accent-green);
+            border-style: solid;
+        }
+
+        .subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 1rem;
+            color: var(--ink-light);
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border-strong);
+            letter-spacing: 0.5px;
+        }
+
+        /* FORM */
+        .form-group { margin-bottom: 22px; position: relative; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            color: var(--ink-medium);
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .form-group label::before {
+            content: '●';
+            font-size: 0.5rem;
+            margin-right: 8px;
+            vertical-align: middle;
+            color: var(--ink-dark);
+            transition: color 0.3s;
+        }
+
+        .form-group:focus-within label { color: var(--accent-orange-dark); }
+        .form-group:focus-within label::before { color: var(--accent-orange); }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: rgba(255,255,255,0.35);
+            border: none;
+            border-bottom: 2px dashed var(--border-strong);
+            padding: 10px 8px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            color: var(--ink-dark);
+            outline: none;
+            transition: all 0.3s;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .form-group input::placeholder { color: var(--ink-faded); font-style: italic; }
+
+        .form-group input:focus, .form-group select:focus {
+            background: rgba(255,255,255,0.7);
+            border-bottom: 2px solid var(--ink-dark);
+            box-shadow: 0 4px 12px rgba(42,38,32,0.08);
+        }
+
+        .form-group select { cursor: pointer; }
+
+        .form-group.has-error input, .form-group.has-error select {
+            border-bottom: 2px solid var(--error-red);
+            background: rgba(181, 68, 58, 0.05);
+        }
+
+        .form-group.has-error label { color: var(--error-red); }
+        .form-group.has-error label::before { color: var(--error-red); }
+
+        .error-msg {
+            color: var(--error-red);
+            font-size: 0.72rem;
+            margin-top: 6px;
+            display: none;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group.has-error .error-msg { 
+            display: block; 
+            animation: shake 0.3s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 22px;
+            border-radius: 4px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::after { left: 100%; }
+        .btn:active:not(:disabled) { transform: translateY(2px) scale(0.99); }
+        .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        .btn-block { width: 100%; }
+        .btn-sm { padding: 7px 13px; font-size: 0.72rem; }
+
+        .btn-primary {
+            background: linear-gradient(180deg, var(--ink-dark) 0%, #1a1815 100%);
+            color: var(--paper-cream);
+            box-shadow: 0 4px 0 #0a0908, 0 6px 16px rgba(0,0,0,0.3);
+        }
+        .btn-primary:hover:not(:disabled) { 
+            background: linear-gradient(180deg, #3a342c 0%, var(--ink-dark) 100%);
+            box-shadow: 0 4px 0 #0a0908, 0 8px 22px rgba(217, 140, 63, 0.35);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--ink-medium);
+            border: 1.5px solid var(--ink-medium);
+            box-shadow: 0 3px 0 var(--ink-medium);
+        }
+        .btn-secondary:hover { background: rgba(42,38,32,0.05); }
+
+        .btn-edit { 
+            background: linear-gradient(180deg, var(--accent-green) 0%, var(--accent-green-dark) 100%); 
+            color: white; 
+            box-shadow: 0 3px 0 #3a5a44;
+        }
+        .btn-edit:hover:not(:disabled) { filter: brightness(1.08); }
+
+        .btn-archive { 
+            background: linear-gradient(180deg, var(--accent-red) 0%, var(--accent-red-dark) 100%); 
+            color: white;
+            box-shadow: 0 3px 0 #78322b;
+        }
+        .btn-archive:hover:not(:disabled) { filter: brightness(1.08); }
+
+        .btn-restore { 
+            background: linear-gradient(180deg, var(--accent-orange) 0%, var(--accent-orange-dark) 100%); 
+            color: white;
+            box-shadow: 0 3px 0 #8e5a23;
+        }
+        .btn-restore:hover:not(:disabled) { filter: brightness(1.08); }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border-strong);
+        }
+
+        .kbd-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65rem;
+            color: var(--ink-faded);
+            margin-left: 8px;
+            font-weight: 400;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .kbd-hint kbd {
+            background: rgba(42,38,32,0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.6rem;
+            border: 1px solid rgba(42,38,32,0.15);
+        }
+
+        /* LIST CONTROLS */
+        .list-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: var(--paper-cream);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            padding: 0 4px;
+        }
+
+        .list-controls .title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Special Elite', monospace;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .list-controls .title-group .count-badge {
+            background: rgba(255,255,255,0.1);
+            color: var(--paper-cream);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            border: 1px solid rgba(255,255,255,0.15);
+            font-family: 'Courier Prime', monospace;
+            letter-spacing: 0;
+        }
+
+        .search-box { flex-grow: 1; max-width: 240px; position: relative; }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: var(--paper-cream);
+            padding: 9px 14px 9px 32px;
+            border-radius: 20px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input::placeholder { color: rgba(255,255,255,0.4); }
+        .search-box input:focus { 
+            border-color: var(--accent-orange); 
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 0 3px rgba(217, 140, 63, 0.15);
+        }
+
+        /* RECORD CARDS */
+        .record-card {
+            position: relative;
+            background-color: var(--paper-light);
+            background-image: 
+                linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(42, 38, 32, 0.025) 26px, rgba(42, 38, 32, 0.025) 27px);
+            border-radius: 4px;
+            padding: 20px 22px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 6px 16px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: fadeInUp 0.4s ease-out;
+            overflow: hidden;
+        }
+
+        .record-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-green);
+            transition: width 0.3s;
+        }
+
+        .record-card.archived::before { background: var(--ink-faded); }
+        .record-card:hover::before { width: 6px; }
+
+        .record-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15), 0 12px 28px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .record-info { flex-grow: 1; min-width: 0; }
+
+        .record-info .record-id {
+            display: inline-block;
+            font-size: 0.68rem;
+            letter-spacing: 1.5px;
+            color: var(--ink-light);
+            background: rgba(42,38,32,0.06);
+            padding: 3px 10px;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .record-info h3 {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--ink-dark);
+            margin-bottom: 6px;
+            word-wrap: break-word;
+            line-height: 1.15;
+        }
+
+        .record-info .program {
+            font-size: 0.78rem;
+            color: var(--ink-medium);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .record-info .program::before { content: '▸'; color: var(--accent-orange); font-size: 0.9rem; }
+
+        .record-info .filed-date {
+            font-size: 0.68rem;
+            color: var(--ink-faded);
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dotted var(--border-subtle);
+        }
+
+        .record-info .filed-date strong {
+            color: var(--ink-light);
+            font-weight: 700;
+        }
+
+        .record-actions { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 6px; 
+            flex-shrink: 0; 
+            align-self: flex-start;
+        }
+
+        .record-actions .btn-sm { min-width: 88px; }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            color: var(--ink-light);
+            background-color: var(--paper-cream);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(42, 38, 32, 0.02) 10px, rgba(42, 38, 32, 0.02) 11px);
+            border: 2px dashed var(--border-strong);
+            border-radius: 4px;
+            font-style: italic;
+            font-size: 0.9rem;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .empty-state .icon { 
+            font-size: 3rem; 
+            display: block; 
+            margin-bottom: 14px;
+            filter: grayscale(0.4);
+            animation: gentleFloat 3s ease-in-out infinite;
+        }
+
+        .empty-state .title {
+            font-family: 'Special Elite', monospace;
+            font-size: 1rem;
+            color: var(--ink-medium);
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-style: normal;
+        }
+
+        .empty-state .sub {
+            font-size: 0.8rem;
+            color: var(--ink-faded);
+        }
+
+        /* MINI TRANSACTION FLOW */
+        .mini-flow {
+            background: linear-gradient(180deg, rgba(22, 20, 18, 0.9) 0%, rgba(30, 28, 25, 0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.68rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .mini-flow .flow-label {
+            color: var(--accent-orange);
+            letter-spacing: 2px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-right: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .mini-flow .flow-label::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-orange);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-orange);
+            animation: pulseDot 1.5s infinite;
+        }
+
+        .mini-step {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.4);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            letter-spacing: 1px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .mini-step .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+
+        .mini-step.active {
+            background: rgba(217, 140, 63, 0.15);
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+            transform: scale(1.08);
+            box-shadow: 0 0 16px rgba(217, 140, 63, 0.3);
+        }
+        .mini-step.active .dot {
+            background: var(--accent-orange);
+            box-shadow: 0 0 8px var(--accent-orange);
+            animation: pulseDot 0.9s infinite;
+        }
+
+        .mini-step.done {
+            background: rgba(93, 138, 106, 0.18);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+        .mini-step.done .dot { 
+            background: var(--accent-green);
+            box-shadow: 0 0 6px var(--accent-green);
+        }
+
+        .mini-step.done::after {
+            content: '✓';
+            margin-left: 3px;
+            font-size: 0.7rem;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .mini-arrow {
+            color: rgba(255,255,255,0.15);
+            font-size: 0.7rem;
+            transition: color 0.3s;
+        }
+
+        .mini-step.done + .mini-arrow,
+        .mini-step.active + .mini-arrow { color: var(--accent-orange); }
+
+        /* TRANSACTION LOG */
+        .txn-log {
+            background: linear-gradient(180deg, rgba(22, 20, 18, 0.9) 0%, rgba(30, 28, 25, 0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-top: 12px;
+            color: #b0a898;
+            font-size: 0.72rem;
+            max-height: 160px;
+            overflow-y: auto;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .txn-log::-webkit-scrollbar { width: 6px; }
+        .txn-log::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 3px; }
+        .txn-log::-webkit-scrollbar-thumb { background: rgba(217, 140, 63, 0.3); border-radius: 3px; }
+        .txn-log::-webkit-scrollbar-thumb:hover { background: rgba(217, 140, 63, 0.5); }
+
+        .txn-log-title {
+            color: #999;
+            letter-spacing: 2.5px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Special Elite', monospace;
+        }
+
+        .txn-log-title button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #999;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .txn-log-title button:hover { 
+            background: rgba(181, 84, 74, 0.2); 
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .txn-log-entry {
+            padding: 5px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            display: flex;
+            gap: 10px;
+            font-size: 0.7rem;
+        }
+
+        .txn-log-entry:last-child { border-bottom: none; }
+        .txn-log-entry .ts { color: #5a5448; flex-shrink: 0; }
+        .txn-log-entry .action { 
+            color: var(--accent-orange); 
+            font-weight: 700; 
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+        .txn-log-entry .msg { color: #a8a090; }
+        .txn-log-entry.success .action { color: var(--accent-green); }
+        .txn-log-entry.error .action { color: var(--accent-red); }
+        .txn-log-entry.error .msg { color: #c89890; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(6px);
+            padding: 20px;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            position: relative;
+            background-color: var(--paper-cream);
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(42, 38, 32, 0.03) 28px, rgba(42, 38, 32, 0.03) 29px);
+            padding: 34px 30px;
+            border-radius: 4px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-top: 4px solid var(--accent-red);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.85) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-box .modal-icon { font-size: 3rem; margin-bottom: 12px; animation: shake 0.6s ease-out; }
+
+        .modal-box h3 { 
+            font-family: 'Special Elite', monospace;
+            color: var(--accent-red-dark); 
+            margin-bottom: 14px; 
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .modal-box p { font-size: 0.85rem; margin-bottom: 16px; line-height: 1.6; color: var(--ink-medium); }
+        
+        .modal-box .highlight {
+            background: rgba(255, 255, 255, 0.6);
+            border-left: 4px solid var(--accent-red);
+            padding: 14px 16px;
+            border-radius: 3px;
+            margin: 16px 0;
+            text-align: left;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .modal-box .highlight strong { color: var(--ink-dark); font-weight: 700; }
+
+        .modal-box .warning-text {
+            font-size: 0.72rem;
+            color: var(--accent-green-dark);
+            background: rgba(93, 138, 106, 0.12);
+            padding: 10px 12px;
+            border-radius: 3px;
+            margin-bottom: 22px;
+            font-weight: 700;
+            border-left: 3px solid var(--accent-green);
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .modal-actions { 
+            display: flex; 
+            gap: 10px; 
+            justify-content: center;
+            padding-top: 18px;
+            border-top: 1px dashed var(--border-strong);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(180deg, var(--ink-dark) 0%, #1a1815 100%);
+            color: var(--paper-cream);
+            padding: 14px 20px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 2000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
+            max-width: 340px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+        .toast.error { background: linear-gradient(180deg, var(--accent-red) 0%, var(--accent-red-dark) 100%); }
+        .toast.success { background: linear-gradient(180deg, var(--accent-green) 0%, var(--accent-green-dark) 100%); }
+        .toast .toast-icon { 
+            font-size: 1.3rem; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 560px) {
+            body { padding: 14px 12px 40px; }
+            .card { padding: 20px 18px; }
+            .header-ribbon h1 { font-size: 1.15rem; letter-spacing: 2px; }
+            .record-card { flex-direction: column; gap: 12px; padding: 16px; }
+            .record-actions { flex-direction: row; width: 100%; justify-content: flex-end; }
+            .record-actions .btn-sm { min-width: 0; flex: 1; }
+            .list-controls { flex-direction: column; align-items: stretch; gap: 10px; }
+            .search-box { max-width: 100%; }
+            .modal-box { padding: 24px 20px; }
+            .mini-flow { font-size: 0.6rem; padding: 10px; gap: 4px; }
+            .mini-step { padding: 3px 7px; font-size: 0.6rem; }
+            .mini-flow .flow-label { width: 100%; justify-content: center; margin-bottom: 4px; }
+            .toast { right: 12px; bottom: 12px; left: 12px; max-width: none; }
+            .record-info h3 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER RIBBON -->
+    <div class="header-ribbon">
+        <div class="crest">📚</div>
+        <h1>Student Records</h1>
+        <div class="subtitle-ribbon">— ARCHIVE SYSTEM • MXL6_iPTO —</div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card" id="form-card">
+        <div class="card-header">
+            <h2>New Record Entry</h2>
+            <span class="badge" id="fill-count">0 / 3 FILLED</span>
+        </div>
+        <p class="subtitle">Fill in the details below, then save the record</p>
+        
+        <form id="record-form" novalidate autocomplete="off">
+            <input type="hidden" id="record-id" name="id">
+            
+            <div class="form-group" id="group-student_id">
+                <label for="student_id">Student ID</label>
+                <input type="text" id="student_id" name="student_id" 
+                       placeholder="2026-001" maxlength="9" inputmode="numeric">
+                <div class="error-msg" id="err-student_id"></div>
+            </div>
+            
+            <div class="form-group" id="group-full_name">
+                <label for="full_name">Full Name</label>
+                <input type="text" id="full_name" name="full_name" 
+                       placeholder="Juan Dela Cruz" maxlength="100">
+                <div class="error-msg" id="err-full_name"></div>
+            </div>
+            
+            <div class="form-group" id="group-program">
+                <label for="program">Program</label>
+                <select id="program" name="program">
+                    <option value="">— Select Program —</option>
+                    <option value="BSIT">BSIT — Information Technology</option>
+                    <option value="BSCS">BSCS — Computer Science</option>
+                    <option value="BSIS">BSIS — Information Systems</option>
+                </select>
+                <div class="error-msg" id="err-program"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="save-btn">
+                💾 Save Record
+                <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>↵</kbd></span>
+            </button>
+        </form>
+        
+        <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                🔄 New Record
+            </button>
+        </div>
+    </div>
+
+    <!-- RECORDS LIST -->
+    <div class="record-list" id="records-container"></div>
+
+    <!-- MINI TRANSACTION FLOW -->
+    <div class="mini-flow" id="mini-flow">
+        <span class="flow-label">Flow</span>
+        
+        <div class="mini-step" data-step="1">
+            <span class="dot"></span> INPUT
+        </div>
+        <span class="mini-arrow">→</span>
+        
+        <div class="mini-step" data-step="2">
+            <span class="dot"></span> VALIDATE
+        </div>
+        <span class="mini-arrow">→</span>
+        
+        <div class="mini-step" data-step="3">
+            <span class="dot"></span> REQUEST
+        </div>
+        <span class="mini-arrow">→</span>
+        
+        <div class="mini-step" data-step="4">
+            <span class="dot"></span> DATABASE
+        </div>
+        <span class="mini-arrow">→</span>
+        
+        <div class="mini-step" data-step="5">
+            <span class="dot"></span> RESPONSE
+        </div>
+    </div>
+
+    <!-- TRANSACTION LOG PANEL -->
+    <div class="txn-log">
+        <div class="txn-log-title">
+            <span>📜 Transaction Log</span>
+            <button onclick="clearLog()">Clear</button>
+        </div>
+        <div id="txn-log-body">
+            <div class="txn-log-entry">
+                <span class="ts">--:--:--</span>
+                <span class="action">[INIT]</span>
+                <span class="msg">System ready. Awaiting user action...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ARCHIVE CONFIRMATION MODAL -->
+<div class="modal-overlay" id="confirm-modal">
+    <div class="modal-box">
+        <div class="modal-icon">⚠️</div>
+        <h3>Confirm Archiving</h3>
+        <p>You are about to archive the following record:</p>
+        <div class="highlight" id="modal-record-details">--</div>
+        <div class="warning-text">
+            🔒 Data will NOT be permanently deleted.<br>
+            You can restore it anytime from Archived Records.
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeModal()" id="modal-cancel">Cancel</button>
+            <button class="btn btn-archive" id="confirm-archive-btn">📦 Yes, Archive</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <span class="toast-icon"></span>
+    <span id="toast-message"></span>
+</div>
+
+<script>
+// ============================================================
+// STATE MANAGEMENT (In-Memory Storage - Walang Database)
+// ============================================================
+let records = JSON.parse(localStorage.getItem('student_records') || '[]');
+let currentView = 'active';
+let archiveTargetId = null;
+let searchTimeout = null;
+let txnStep = 0;
+
+// ============================================================
+// STORAGE HELPERS
+// ============================================================
+function saveRecords() {
+    localStorage.setItem('student_records', JSON.stringify(records));
+}
+
+function generateId() {
+    return Date.now() + Math.floor(Math.random() * 1000);
+}
+
+// ============================================================
+// TRANSACTION LOGGING
+// ============================================================
+function logTxn(action, message, type = 'info') {
+    const logBody = document.getElementById('txn-log-body');
+    if (!logBody) return;
+    
+    const now = new Date();
+    const ts = now.toTimeString().slice(0, 8);
+    
+    const entry = document.createElement('div');
+    entry.className = `txn-log-entry ${type}`;
+    entry.innerHTML = `
+        <span class="ts">${ts}</span>
+        <span class="action">[${action}]</span>
+        <span class="msg">${message}</span>
+    `;
+    logBody.appendChild(entry);
+    logBody.scrollTop = logBody.scrollHeight;
+    console.log(`[TXN][${action}] ${message}`);
+}
+
+function clearLog() {
+    const logBody = document.getElementById('txn-log-body');
+    if (logBody) {
+        logBody.innerHTML = `
+            <div class="txn-log-entry">
+                <span class="ts">--:--:--</span>
+                <span class="action">[CLEAR]</span>
+                <span class="msg">Transaction log cleared.</span>
+            </div>
+        `;
+    }
+}
+
+// ============================================================
+// MINI FLOW VISUAL CONTROL
+// ============================================================
+function setFlowStep(stepNumber, status = 'active') {
+    document.querySelectorAll('.mini-step').forEach(el => {
+        el.classList.remove('active', 'done');
+    });
+    for (let i = 1; i < stepNumber; i++) {
+        document.querySelector(`.mini-step[data-step="${i}"]`)?.classList.add('done');
+    }
+    const current = document.querySelector(`.mini-step[data-step="${stepNumber}"]`);
+    if (status === 'done') {
+        current?.classList.add('done');
+    } else if (status === 'active') {
+        current?.classList.add('active');
+    }
+}
+
+function resetFlow() {
+    document.querySelectorAll('.mini-step').forEach(el => {
+        el.classList.remove('active', 'done');
+    });
+    txnStep = 0;
+}
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    logTxn('BOOT', 'Application initialized');
+    resetFlow();
+    loadRecords();
+    updateFillCount();
+    
+    document.getElementById('record-form').addEventListener('submit', handleSave);
+    
+    const sidInput = document.getElementById('student_id');
+    sidInput.addEventListener('input', (e) => {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 4) val = val.slice(0, 4) + '-' + val.slice(4, 8);
+        e.target.value = val;
+        updateFillCount();
+        clearError('student_id');
+        if (val.length > 0 && txnStep < 1) {
+            txnStep = 1;
+            setFlowStep(1, 'active');
+        }
+    });
+
+    sidInput.addEventListener('blur', () => validateField('student_id'));
+    document.getElementById('full_name').addEventListener('input', () => { 
+        updateFillCount(); 
+        clearError('full_name'); 
+    });
+    document.getElementById('full_name').addEventListener('blur', () => validateField('full_name'));
+    document.getElementById('program').addEventListener('change', () => { 
+        updateFillCount(); 
+        clearError('program'); 
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Enter' && e.ctrlKey && document.activeElement.closest('#record-form')) {
+            e.preventDefault();
+            document.getElementById('record-form').requestSubmit();
+        }
+    });
+
+    document.getElementById('confirm-archive-btn').addEventListener('click', executeArchive);
+});
+
+// ============================================================
+// HELPERS
+// ============================================================
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = toast.querySelector('.toast-icon');
+    const msg = document.getElementById('toast-message');
+    icon.textContent = type === 'success' ? '✓' : '✕';
+    msg.textContent = message;
+    toast.className = `toast show ${type}`;
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function showError(field, message) {
+    const group = document.getElementById(`group-${field}`);
+    const errEl = document.getElementById(`err-${field}`);
+    if (group && errEl) {
+        group.classList.add('has-error');
+        errEl.textContent = message;
+    }
+}
+
+function clearError(field) {
+    const group = document.getElementById(`group-${field}`);
+    if (group) group.classList.remove('has-error');
+}
+
+function clearAllErrors() {
+    document.querySelectorAll('.form-group').forEach(g => g.classList.remove('has-error'));
+}
+
+function validateField(field) {
+    const value = document.getElementById(field).value.trim();
+    if (field === 'student_id') {
+        if (!value) return showError('student_id', 'Student ID is required.');
+        if (!/^\d{4}-\d{3,4}$/.test(value)) return showError('student_id', 'Use format: YYYY-XXX (e.g., 2026-001).');
+        clearError('student_id');
+    } else if (field === 'full_name') {
+        if (!value) return showError('full_name', 'Full Name is required.');
+        if (value.length < 3) return showError('full_name', 'Name is too short.');
+        if (!/^[a-zA-Z\s\.\-ñÑ]+$/.test(value)) return showError('full_name', 'Letters and spaces only.');
+        clearError('full_name');
+    } else if (field === 'program') {
+        if (!value) return showError('program', 'Please select a program.');
+        clearError('program');
+    }
+    return true;
+}
+
+function updateFillCount() {
+    const ids = ['student_id', 'full_name', 'program'];
+    let filled = 0;
+    ids.forEach(id => {
+        if (document.getElementById(id).value.trim() !== '') filled++;
+    });
+    const badge = document.getElementById('fill-count');
+    badge.textContent = `${filled} / 3 FILLED`;
+    if (filled === 3) {
+        badge.classList.add('filled-full');
+    } else {
+        badge.classList.remove('filled-full');
+    }
+}
+
+function resetForm() {
+    document.getElementById('record-form').reset();
+    document.getElementById('record-id').value = '';
+    clearAllErrors();
+    updateFillCount();
+    resetFlow();
+    document.getElementById('save-btn').innerHTML = '💾 Save Record <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>↵</kbd></span>';
+    document.getElementById('student_id').focus();
+    logTxn('RESET', 'Form cleared. Ready for new input.');
+}
+
+// ============================================================
+// SAVE HANDLER (Walang API - localStorage lang)
+// ============================================================
+async function handleSave(e) {
+    e.preventDefault();
+    clearAllErrors();
+    
+    logTxn('INPUT', 'Form submitted by user');
+    setFlowStep(1, 'done');
+    setFlowStep(2, 'active');
+    
+    const sidValid = validateField('student_id');
+    const nameValid = validateField('full_name');
+    const progValid = validateField('program');
+    
+    if (!sidValid || !nameValid || !progValid) {
+        logTxn('VALIDATE', 'Client-side validation failed', 'error');
+        showToast('Please fix the errors in the form.', 'error');
+        setFlowStep(2, 'active');
+        return;
+    }
+    
+    logTxn('VALIDATE', 'Client-side validation passed');
+    setFlowStep(2, 'done');
+    setFlowStep(3, 'active');
+
+    const id = document.getElementById('record-id').value;
+    const student_id = document.getElementById('student_id').value.trim();
+    const full_name = document.getElementById('full_name').value.trim();
+    const program = document.getElementById('program').value;
+
+    // Check duplicate (if new record)
+    if (!id) {
+        const duplicate = records.find(r => r.student_id === student_id && !r.is_archived);
+        if (duplicate) {
+            logTxn('VALIDATE', 'Duplicate Student ID detected', 'error');
+            showError('student_id', 'This Student ID is already active.');
+            showToast('Student ID already exists!', 'error');
+            setFlowStep(2, 'active');
+            return;
+        }
+    }
+
+    const btn = document.getElementById('save-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Saving...';
+    btn.disabled = true;
+
+    logTxn('REQUEST', 'Saving to localStorage');
+
+    // Simulate async save (para makita ang flow)
+    setTimeout(async () => {
+        if (id) {
+            // UPDATE
+            const index = records.findIndex(r => r.id == id);
+            if (index !== -1) {
+                records[index] = {
+                    ...records[index],
+                    student_id,
+                    full_name,
+                    program
+                };
+                logTxn('DB', `Updated record ID ${id}`, 'success');
+            }
+        } else {
+            // INSERT
+            records.unshift({
+                id: generateId(),
+                student_id,
+                full_name,
+                program,
+                is_archived: 0,
+                created_at: new Date().toISOString()
+            });
+            logTxn('DB', 'Inserted new record', 'success');
+        }
+        
+        saveRecords();
+        setFlowStep(3, 'done');
+        setFlowStep(4, 'active');
+        setFlowStep(4, 'done');
+        setFlowStep(5, 'active');
+        
+        showToast(id ? 'Record updated successfully!' : 'New record saved!', 'success');
+        resetForm();
+        
+        setTimeout(() => {
+            setFlowStep(5, 'done');
+            logTxn('DONE', 'Transaction completed', 'success');
+            setTimeout(resetFlow, 1500);
+        }, 800);
+        
+        loadRecords();
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }, 400);
+}
+
+// ============================================================
+// LOAD & RENDER RECORDS
+// ============================================================
+function loadRecords() {
+    logTxn('FETCH', `Loading ${currentView} records`);
+    const searchVal = document.getElementById('search-input')?.value || '';
+    
+    let filtered = records.filter(r => 
+        currentView === 'active' ? r.is_archived === 0 : r.is_archived === 1
+    );
+    
+    if (searchVal) {
+        const q = searchVal.toLowerCase();
+        filtered = filtered.filter(r => 
+            r.student_id.toLowerCase().includes(q) ||
+            r.full_name.toLowerCase().includes(q) ||
+            r.program.toLowerCase().includes(q)
+        );
+    }
+    
+    renderRecords(filtered, searchVal);
+    logTxn('FETCH', `Loaded ${filtered.length} record(s)`, 'success');
+}
+
+function renderRecords(list, searchVal = '') {
+    const container = document.getElementById('records-container');
+    const count = list.length;
+    const title = currentView === 'active' ? 'Active Records' : 'Archived Records';
+    const icon = currentView === 'active' ? '📋' : '📂';
+    
+    let html = `
+        <div class="list-controls">
+            <div class="title-group">
+                <span>${icon} ${title}</span>
+                <span class="count-badge">${count}</span>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search ID, name, or program..." value="${searchVal}">
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="toggleView()">
+                ${currentView === 'active' ? '📂 Archived' : '📋 Active'}
+            </button>
+        </div>
+    `;
+
+    if (list.length === 0) {
+        html += `
+            <div class="empty-state">
+                <span class="icon">${searchVal ? '🔍' : '📭'}</span>
+                <div class="title">${searchVal ? 'No Matches Found' : 'No Records Yet'}</div>
+                <div class="sub">${searchVal ? 'Try a different search term.' : 'Add a new record using the form above.'}</div>
+            </div>
+        `;
+    } else {
+        list.forEach(rec => {
+            const date = new Date(rec.created_at).toLocaleDateString('en-US', { 
+                month: 'short', day: 'numeric', year: 'numeric' 
+            });
+            const safeName = rec.full_name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            const safeProgram = rec.program.replace(/'/g, "\\'");
+            const programLabel = {
+                'BSIT': 'BS Information Technology',
+                'BSCS': 'BS Computer Science',
+                'BSIS': 'BS Information Systems'
+            }[rec.program] || rec.program;
+            
+            html += `
+                <div class="record-card ${currentView === 'archived' ? 'archived' : ''}">
+                    <div class="record-info">
+                        <div class="record-id">ID · ${rec.student_id}</div>
+                        <h3>${rec.full_name}</h3>
+                        <div class="program">${programLabel}</div>
+                        <div class="filed-date"><strong>FILED:</strong> ${date}</div>
+                    </div>
+                    <div class="record-actions">
+                        ${currentView === 'active' ? `
+                            <button class="btn btn-edit btn-sm" onclick="editRecord(${rec.id}, '${rec.student_id}', '${safeName}', '${safeProgram}')">✏️ Edit</button>
+                            <button class="btn btn-archive btn-sm" onclick="promptArchive(${rec.id}, '${safeName}', '${rec.student_id}')">📦 Archive</button>
+                        ` : `
+                            <button class="btn btn-restore btn-sm" onclick="restoreRecord(${rec.id})">↩️ Restore</button>
+                        `}
+                    </div>
+                </div>
+            `;
+        });
+    }
+    container.innerHTML = html;
+    
+    const newSearch = document.getElementById('search-input');
+    if (newSearch) {
+        newSearch.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => loadRecords(), 350);
+        });
+        if (searchVal) {
+            newSearch.focus();
+            newSearch.setSelectionRange(searchVal.length, searchVal.length);
+        }
+    }
+}
+
+// ============================================================
+// ACTIONS
+// ============================================================
+function editRecord(id, student_id, full_name, program) {
+    logTxn('EDIT', `Editing record ID ${id}`);
+    document.getElementById('record-id').value = id;
+    document.getElementById('student_id').value = student_id;
+    document.getElementById('full_name').value = full_name;
+    document.getElementById('program').value = program;
+    document.getElementById('save-btn').innerHTML = '💾 Update Record <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>↵</kbd></span>';
+    updateFillCount();
+    clearAllErrors();
+    resetFlow();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('student_id').focus();
+}
+
+function promptArchive(id, name, studentId) {
+    archiveTargetId = id;
+    document.getElementById('modal-record-details').innerHTML = 
+        `<strong>ID:</strong> ${studentId}<br><strong>Name:</strong> ${name}`;
+    document.getElementById('confirm-modal').classList.add('active');
+    logTxn('CONFIRM', `Archive confirmation for ID ${id}`);
+}
+
+function closeModal() {
+    document.getElementById('confirm-modal').classList.remove('active');
+    archiveTargetId = null;
+}
+
+function executeArchive() {
+    if (!archiveTargetId) return;
+    logTxn('ARCHIVE', `Archiving record ID ${archiveTargetId} (soft delete)`);
+    
+    const record = records.find(r => r.id == archiveTargetId);
+    if (record) {
+        record.is_archived = 1; // Soft delete - hindi tinatanggal
+        saveRecords();
+        logTxn('ARCHIVE', 'Record archived. Data preserved.', 'success');
+        showToast('Record archived. Data is preserved.', 'success');
+        loadRecords();
+    }
+    closeModal();
+}
+
+function restoreRecord(id) {
+    logTxn('RESTORE', `Restoring record ID ${id}`);
+    const record = records.find(r => r.id == id);
+    if (record) {
+        // Check duplicate
+        const duplicate = records.find(r => r.student_id === record.student_id && r.is_archived === 0);
+        if (duplicate) {
+            logTxn('ERROR', 'Cannot restore - duplicate active record exists', 'error');
+            showToast('Cannot restore. An active record with this ID already exists.', 'error');
+            return;
+        }
+        record.is_archived = 0;
+        saveRecords();
+        logTxn('RESTORE', 'Record restored', 'success');
+        showToast('Record restored to active list!', 'success');
+        loadRecords();
+    }
+}
+
+function toggleView() {
+    currentView = currentView === 'active' ? 'archived' : 'active';
+    logTxn('VIEW', `Switched to ${currentView} view`);
+    loadRecords();
+}
+</script>
+
+</body>
+</html>
